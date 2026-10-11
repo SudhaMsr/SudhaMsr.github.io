@@ -82,7 +82,7 @@ export const projects: Project[] = [
     title: "Vision Assist",
     tagline: "Object detection for blind and low-vision pedestrians: a 2024 team prototype, now a research project on how assistive vision fails.",
     domain: "vision",
-    year: "2024 · 2025 – now",
+    year: "2024 prototype · Nov 2025 – now research",
     status: "Research in progress · baseline model not yet trained",
     stack: ["Python", "PyTorch", "Ultralytics YOLO", "OpenCV", "Flask", "Kaggle"],
     points: [],
@@ -455,7 +455,7 @@ export const experience: Role[] = [
     place: "Bristol, UK",
     dates: "Nov 2025 – Present",
     type: "research",
-    summary: "Researching why vision-based navigation aids for blind and low-vision people fail, building on a 2024 team prototype.",
+    summary: "Independent research since November 2025, ongoing: why vision-based navigation aids for blind and low-vision people fail. It builds on a separate 2024 team prototype (Google Solution Challenge).",
     points: [
       "Defined a 14-class safety-oriented detection taxonomy and annotation standard from accessibility research",
       "Audited and acquired public datasets with documented licence checks (17,858 COCO images checked individually)",
