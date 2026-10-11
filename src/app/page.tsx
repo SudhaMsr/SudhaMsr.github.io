@@ -5,78 +5,97 @@ import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
 import AskCV from "@/components/AskCV";
 import CopyEmail from "@/components/CopyEmail";
-import Mascot from "@/components/Mascot";
 import Brain from "@/components/Brain";
 import ScrollThread from "@/components/ScrollThread";
 import DataStream from "@/components/DataStream";
 import { DownloadIcon, GitHubIcon, LinkedInIcon, MailIcon, MediumIcon } from "@/components/Icons";
 import Image from "next/image";
-import { bachelors, beyond, certifications, hackathons, masters, profile, stats } from "@/data/profile";
+import { bachelors, beyond, certifications, coreStack, experienceMix, hackathons, masters, profile, stats } from "@/data/profile";
 
 export default function Home() {
   return (
     <>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Nav />
-      <main id="top">
+      <main id="main">
         <ScrollThread />
         {/* ── Hero ── */}
-        <section id="hero" className="hero">
+        <section id="hero" className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-top">
-            <div className="hero-id">
-              <div className="id-row">
-                <Image className="id-photo" src={profile.photo} alt="Sudha Rani Maddala" width={800} height={800} sizes="84px" priority />
-                <div className="id-text">
-                  <span className="open-badge">
-                    <span className="pulse" aria-hidden />
-                    Open to work
-                  </span>
-                  <span className="id-sub">Data Science &amp; AI/ML roles · {profile.location}</span>
-                </div>
+            <div className="id-row">
+              <Image className="id-photo" src={profile.photo} alt="Sudha Rani Maddala" width={800} height={800} sizes="84px" priority />
+              <div className="id-text">
+                <p className="id-name">{profile.name}</p>
+                <span className="open-badge">
+                  <span className="pulse" aria-hidden />
+                  Open to work
+                </span>
+                <span className="id-sub">
+                  {profile.location} · {profile.relocation}
+                </span>
               </div>
-              <p className="intro">
-                I&apos;m <strong>Sudha Rani Maddala</strong>, a data scientist with an MSc from the University of Bristol. I build{" "}
-                <strong>LLM &amp; RAG systems</strong>, <strong>real-time computer vision</strong> and <strong>optimised models</strong>, with
-                accessibility and responsible AI at the centre.
-              </p>
             </div>
-            <div className="hero-actions">
+            <nav className="hero-actions" aria-label="Quick links">
               <div className="hero-ctas">
                 <a href="#projects" className="btn">
-                  Explore my work <span aria-hidden>→</span>
+                  Featured projects <span aria-hidden>→</span>
                 </a>
                 <a href={profile.cv} className="btn ghost" download="Sudha-Rani-Maddala-CV.pdf">
-                  <DownloadIcon /> Download CV
+                  <DownloadIcon /> Download CV <span className="sr-only">(PDF)</span>
                 </a>
               </div>
-              <ul className="socials" aria-label="Profiles">
+              <ul className="hero-links">
                 <li>
-                  <a href={profile.links.github} target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
-                    <GitHubIcon />
+                  <a href={profile.links.github} target="_blank" rel="noopener">
+                    <GitHubIcon /> GitHub<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
                 <li>
-                  <a href={profile.links.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
-                    <LinkedInIcon />
+                  <a href={profile.links.linkedin} target="_blank" rel="noopener">
+                    <LinkedInIcon /> LinkedIn<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
                 <li>
-                  <a href={profile.links.medium} target="_blank" rel="noopener" aria-label="Medium" title="Medium">
-                    <MediumIcon />
-                  </a>
-                </li>
-                <li>
-                  <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.email}`} title={profile.email}>
-                    <MailIcon />
+                  <a href="#contact">
+                    <MailIcon /> Contact
                   </a>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
           <div className="wrap hero-grid">
             <div className="hero-main">
-              <h1>
-                I build AI that <span className="grad-text">sees, listens</span> and understands <em>people.</em>
+              <h1 id="hero-title">
+                Applied AI/ML Engineer <span className="grad-text">&amp; Data Scientist</span>
               </h1>
+              <p className="hero-lead">{profile.summary}</p>
+              <dl className="hero-facts">
+                <div>
+                  <dt>Looking for</dt>
+                  <dd>Graduate and junior {profile.targetRoles.join(", ").replace(/, ([^,]*)$/, " and $1")} roles in the UK, the Netherlands and Germany</dd>
+                </div>
+                <div>
+                  <dt>Core stack</dt>
+                  <dd>
+                    <ul className="stack-chips" aria-label="Core technologies">
+                      {coreStack.map((t) => (
+                        <li key={t} className="chip">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Recent work</dt>
+                  <dd>
+                    A FastAPI/PostgreSQL analytics platform with a grounded LLM assistant, an assistive-vision dataset pipeline, and a LangChain
+                    CV-screening tool. <a href="#projects">See the case studies</a>.
+                  </dd>
+                </div>
+              </dl>
               <div className="stats">
                 {stats.map((s) => (
                   <div key={s.label}>
@@ -103,9 +122,9 @@ export default function Home() {
                 mine.
               </p>
               <p>
-                I started in electronics engineering, moved into data science consulting in Bengaluru, then did my MSc in Bristol. Since then
-                I&apos;ve worked on fraud detection with Lloyds Banking Group, real-time vision for blind and visually impaired people, and RAG
-                systems that make documents conversational.
+                I started in electronics engineering, moved into data science consulting in Bengaluru, then did my MSc in Bristol. There I worked
+                on fraud detection in a university project with Lloyds Banking Group. Since graduating I&apos;ve built a full-stack analytics
+                platform as a freelancer and continued research into assistive computer vision for blind and low-vision people.
               </p>
               <ul className="beyond">
                 {beyond.map((b) => (
@@ -117,13 +136,13 @@ export default function Home() {
             <article className="card-mc reveal" aria-label="Model card">
               <header>
                 <span className="mono">model_card.md</span>
-                <span className="chip">v2026 · open to work</span>
+                <span className="chip">open to work</span>
               </header>
               <dl>
                 <dt>model</dt>
                 <dd>
                   Sudha Rani Maddala
-                  <small>Data Scientist · AI/ML Engineer</small>
+                  <small>{profile.headline}</small>
                 </dd>
                 <dt>architecture</dt>
                 <dd>
@@ -132,22 +151,22 @@ export default function Home() {
                 </dd>
                 <dt>training data</dt>
                 <dd>
-                  11 roles across the UK &amp; India, 2021 – 2026
-                  <small>Lloyds Banking Group, DataMites, Labmentix, 4 Real Consulting and more</small>
+                  {experienceMix.join(", ")} · UK &amp; India, 2021 – 2026
+                  <small>4 Real Consulting, Labmentix, Personifwy, DataMites, a University of Bristol project with Lloyds Banking Group and more</small>
                 </dd>
                 <dt>intended use</dt>
                 <dd>
-                  Data Scientist · ML Engineer · Applied AI roles
+                  {profile.targetRoles.join(" · ")} roles
                   <small>where models need to work for real people, not just on a benchmark</small>
                 </dd>
                 <dt>evaluation</dt>
-                <dd>Top 100, Google Solution Challenge · hackathon winner · Bristol Plus Award</dd>
+                <dd>Top 100, Google Solution Challenge 2024 (team) · Bristol PLUS Award · university hackathons</dd>
                 <dt>ethical considerations</dt>
-                <dd>Fairness &amp; interpretability analysis, privacy-preserving edge AI, accessibility-first research</dd>
+                <dd>Blind screening and explainable scores, number-checked AI output, licence-audited datasets, limitations stated up front</dd>
                 <dt>deployment</dt>
                 <dd>
-                  {profile.location}
-                  <small>{profile.visa}</small>
+                  {profile.location} · {profile.relocation.toLowerCase()}
+                  <small>{profile.workRights}</small>
                 </dd>
                 <dt>languages</dt>
                 <dd>English, Hindi, Telugu</dd>
@@ -167,7 +186,7 @@ export default function Home() {
                 </h2>
               </div>
               <p className="lead" style={{ margin: 0, maxWidth: "42ch" }}>
-                The tools I use across the whole ML lifecycle. Drag the universe to explore, or tap a group to light it up.
+                Grouped by area. Everything listed is used in a project or role on this page.
               </p>
             </div>
             <Skills />
@@ -179,13 +198,13 @@ export default function Home() {
           <div className="wrap">
             <div className="sec-head">
               <div>
-                <p className="eyebrow">Selected projects</p>
+                <p className="eyebrow">Featured projects</p>
                 <h2 className="h2">
-                  Models that leave <em>the notebook.</em>
+                  Three projects, <em>with the evidence.</em>
                 </h2>
               </div>
-              <p className="lead" style={{ margin: 0, maxWidth: "42ch" }}>
-                From research prototypes to deployed apps. Filter by field, or click a point on the map above to jump to a project.
+              <p className="lead" style={{ margin: 0, maxWidth: "46ch" }}>
+                Each one sets out the problem, my part, the architecture, what was measured, what wasn&apos;t, and the limitations.
               </p>
             </div>
             <Projects />
@@ -277,7 +296,7 @@ export default function Home() {
                 <span className="mono">2023</span> MSc Data Science · Bristol, UK
               </li>
               <li className="done">
-                <span className="mono">2025</span> Graduated, University of Bristol
+                <span className="mono">Jan 2025</span> Graduated MSc, University of Bristol
               </li>
             </ol>
 
@@ -346,7 +365,8 @@ export default function Home() {
                 Let&apos;s build something <em className="grad-text">useful</em> together.
               </h2>
               <p className="contact-lead">
-                Open to Data Scientist, ML Engineer and AI Engineer roles. If you&apos;re building AI that has to work for real people, I&apos;d love to hear from you.
+                Open to graduate and junior Data Scientist, Applied AI, ML Engineer and Data Engineer roles in the UK, the Netherlands and Germany.
+                If you&apos;re building AI that has to work for real people, I&apos;d love to hear from you.
               </p>
               <div className="contact-actions">
                 <a href={`mailto:${profile.email}`} className="btn">
@@ -358,22 +378,22 @@ export default function Home() {
               <ul className="contact-links" aria-label="Elsewhere">
                 <li>
                   <a href={profile.links.linkedin} target="_blank" rel="noopener">
-                    <LinkedInIcon /> LinkedIn
+                    <LinkedInIcon /> LinkedIn<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
                 <li>
                   <a href={profile.links.github} target="_blank" rel="noopener">
-                    <GitHubIcon /> GitHub
+                    <GitHubIcon /> GitHub<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
                 <li>
                   <a href={profile.links.medium} target="_blank" rel="noopener">
-                    <MediumIcon /> Medium
+                    <MediumIcon /> Medium<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
                 <li>
                   <a href={profile.cv} download="Sudha-Rani-Maddala-CV.pdf">
-                    <DownloadIcon /> CV
+                    <DownloadIcon /> CV <span className="sr-only">(PDF)</span>
                   </a>
                 </li>
               </ul>
@@ -381,8 +401,13 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <footer className="wrap footer">
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <span>
+          {profile.location} · <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        </span>
+      </footer>
       <DataStream />
-      <Mascot />
     </>
   );
 }

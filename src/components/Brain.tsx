@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { rgba } from "@/lib/color";
 import { BUILD_COLORS, BUILD_EVENT, type BuildProgress } from "@/lib/build";
 // one accent colour keeps the brain calm; BUILD_COLORS only sets how many sections train it
@@ -61,7 +61,6 @@ function buildBrain() {
 export default function Brain() {
   const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [pct, setPct] = useState(0);
 
   useEffect(() => {
     const box = boxRef.current!;
@@ -78,7 +77,6 @@ export default function Brain() {
     let rotY = 0.6, mx = 0, my = 0;
     let colors: string[] = [], line = "#2e3946", ink = "#e9edf0";
     const pulses: { e: number; t: number; sp: number }[] = [];
-    let lastPct = -1;
 
     const readTheme = () => {
       const cs = getComputedStyle(document.documentElement);
@@ -97,11 +95,6 @@ export default function Brain() {
       const d = (e as CustomEvent<BuildProgress>).detail;
       target = Math.round(d.p * N);
       done = d.p >= 0.999;
-      const v = Math.round(d.p * 100);
-      if (v !== lastPct) {
-        lastPct = v;
-        setPct(v);
-      }
     };
 
     const project = (x: number, y: number, z: number) => {
@@ -204,20 +197,11 @@ export default function Brain() {
     };
   }, []);
 
-  const ready = pct >= 100;
+  // decorative only: the network fills in as the visitor scrolls, with no fake progress readout
   return (
-    <div className="brain" ref={boxRef}>
-      <canvas ref={canvasRef} aria-hidden />
-      <div className="brain-hud mono" aria-hidden>
-        <span>
-          <b>brain</b>.assemble()
-        </span>
-        <span className={ready ? "ready" : ""}>{ready ? "model ready ✓" : `training… ${pct}%`}</span>
-      </div>
-      <div className="brain-bar" aria-hidden>
-        <i style={{ width: `${pct}%` }} />
-      </div>
-      <span className="brain-entry" aria-hidden />
+    <div className="brain" ref={boxRef} aria-hidden>
+      <canvas ref={canvasRef} />
+      <span className="brain-entry" />
     </div>
   );
 }

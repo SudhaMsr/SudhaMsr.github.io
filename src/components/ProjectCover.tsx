@@ -96,6 +96,35 @@ function Rag() {
   );
 }
 
+function Screener() {
+  const scores = [85, 82, 72, 60, 34, 15];
+  return (
+    <svg viewBox="0 0 480 220" aria-hidden className="cv">
+      {/* CVs with personal details redacted */}
+      {[0, 1, 2].map((i) => (
+        <g key={i} transform={`translate(${24 + i * 14} ${30 + i * 14})`}>
+          <rect className="s bd" width="92" height="118" rx="6" />
+          <rect className="t-fill" x="12" y="14" width="52" height="9" rx="2" />
+          {[34, 48, 62, 76, 90].map((y) => (
+            <rect key={y} className="m" x="12" y={y} width={y % 28 ? 60 : 68} height="5" rx="2.5" opacity=".45" />
+          ))}
+        </g>
+      ))}
+      <path className="cs flow" d="M168 108 H206" strokeWidth="2" strokeDasharray="4 5" />
+      <path className="cs" d="M200 102 l8 6 -8 6" strokeWidth="2" fill="none" />
+      {/* ranked, explainable scores */}
+      {scores.map((v, i) => (
+        <g key={v} transform={`translate(226 ${34 + i * 26})`}>
+          <rect className="m" width="196" height="12" rx="6" opacity=".18" />
+          <rect className="c" width={r2(v * 1.96)} height="12" rx="6" opacity={0.45 + v / 200} />
+          <text className="t sm" x="206" y="10">{v}</text>
+        </g>
+      ))}
+      <text className="t sm" x="226" y="206">skills · nice-to-haves · TF-IDF</text>
+    </svg>
+  );
+}
+
 function Manaswel() {
   return (
     <svg viewBox="0 0 480 220" aria-hidden className="cv">
@@ -284,6 +313,8 @@ export default function ProjectCover({ slug }: { slug: string }) {
       return <Speech />;
     case "conversational-rag":
       return <Rag />;
+    case "resume-screener":
+      return <Screener />;
     case "manaswel":
       return <Manaswel />;
     case "ai-medvision":

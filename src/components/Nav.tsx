@@ -44,7 +44,7 @@ export default function Nav() {
   return (
     <header className={`nav ${scrolled || open ? "scrolled" : ""}`}>
       <div className="wrap nav-in">
-        <a href="#top" className="logo" aria-label="Sudha Rani Maddala, home">
+        <a href="#hero" className="logo" aria-label="Sudha Rani Maddala, home">
           <span className="logo-mark" aria-hidden>SM</span>
           <span>
             Sudha<span className="name-rest"> Rani Maddala</span>

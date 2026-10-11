@@ -153,7 +153,7 @@ export default function EmbeddingMap() {
         if (d < 22 && (!best || d < best.d)) best = { p, d, x, y };
       }
       hoverRef.current = best?.p.slug ?? null;
-      canvas.style.cursor = best?.p.featured ? "pointer" : "default";
+      canvas.style.cursor = best ? "pointer" : "default";
       setTip(best ? { x: best.x, y: best.y, title: best.p.title, tagline: best.p.tagline } : null);
       if (reduced) draw(0);
     };
@@ -195,10 +195,10 @@ export default function EmbeddingMap() {
     <figure style={{ margin: 0 }}>
       <div className="map" ref={boxRef}>
         <div className="map-bar mono">
-          <span><b>project_embeddings</b>.plot()</span>
-          <span>n={projects.length} · 2D</span>
+          <span><b>Project map</b></span>
+          <span>{projects.length} projects by field</span>
         </div>
-        <canvas ref={canvasRef} role="img" aria-label="Map of Sudha's projects clustered into Computer Vision, LLMs & GenAI, NLP & Speech, and Data & Analytics" />
+        <canvas ref={canvasRef} role="img" aria-label="Illustrative map of Sudha's projects grouped into Computer Vision, LLMs & GenAI, NLP & Speech, and Data & Analytics. The same projects are listed in the Projects section." />
         {tip && (
           <div className="map-tip" style={{ left: tip.x, top: tip.y }}>
             <b>{tip.title}</b>
@@ -220,7 +220,9 @@ export default function EmbeddingMap() {
           ))}
         </div>
       </div>
-      <figcaption className="map-caption">Every project I&apos;ve built, grouped by field. Hover a point to see it, or tap a field to highlight it.</figcaption>
+      <figcaption className="map-caption">
+        Projects grouped by field (an illustrative layout, not a computed embedding). Hover a point for its name, or pick a field to highlight it.
+      </figcaption>
     </figure>
   );
 }

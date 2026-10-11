@@ -5,16 +5,16 @@ import { skillColor, skills } from "@/data/profile";
 import SkillsUniverse from "./SkillsUniverse";
 
 export default function Skills() {
-  const [view, setView] = useState<"universe" | "grid">("universe");
+  const [view, setView] = useState<"universe" | "grid">("grid");
 
   return (
     <>
       <div className="view-toggle" role="group" aria-label="Skills view">
-        <button type="button" aria-pressed={view === "universe"} onClick={() => setView("universe")}>
-          <span aria-hidden>✦</span> Skills universe
-        </button>
         <button type="button" aria-pressed={view === "grid"} onClick={() => setView("grid")}>
-          <span aria-hidden>▦</span> Grid
+          <span aria-hidden>▦</span> List
+        </button>
+        <button type="button" aria-pressed={view === "universe"} onClick={() => setView("universe")}>
+          <span aria-hidden>✦</span> Interactive 3D view
         </button>
       </div>
 

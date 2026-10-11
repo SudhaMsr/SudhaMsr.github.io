@@ -1,22 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { experience, type Role } from "@/data/profile";
+import { experience, experienceMix, type RoleType } from "@/data/profile";
 import { ChevronDown } from "./Icons";
 
 const SHOWN = 5;
 
 /** Role types, in legend order, with the colour token each uses. */
-const TYPES = {
+const TYPES: Record<RoleType, { label: string; color: string }> = {
   freelance: { label: "Freelance", color: "var(--v-vision)" },
-  research: { label: "Research", color: "var(--v-ml)" },
-  consulting: { label: "Consulting", color: "var(--v-analytics)" },
   internship: { label: "Internship", color: "var(--v-nlp)" },
-} as const;
-type RoleType = keyof typeof TYPES;
-
-const typeOf = (r: Role): RoleType =>
-  r.kind === "Freelance" ? "freelance" : r.kind === "Research" ? "research" : r.kind === "Internship" ? "internship" : "consulting";
+  consulting: { label: "Consulting", color: "var(--v-analytics)" },
+  academic: { label: "University project", color: "var(--v-llm)" },
+  research: { label: "Independent research", color: "var(--v-ml)" },
+};
 
 // ── dates: "Aug 2026 – Present" → month indexes (year * 12 + month)
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -26,7 +23,7 @@ const toMonth = (s: string) => {
   const [m, y] = s.trim().split(/\s+/);
   return Number(y) * 12 + MONTHS.indexOf(m);
 };
-const span = (r: Role) => {
+const span = (r: { dates: string }) => {
   const [a, b] = r.dates.split("–");
   return [toMonth(a), toMonth(b) + 1] as const; // end month is inclusive
 };
@@ -83,16 +80,16 @@ export default function Experience() {
       <div className="xp-side">
         <p className="eyebrow">Experience</p>
         <h2 className="h2">
-          Five years of <em>real-world data.</em>
+          Internships, freelance work <em>and project partnerships.</em>
         </h2>
-        <p className="lead">Consulting, research and internships across banking, healthcare, education and social impact.</p>
+        <p className="lead">Since 2021: {experienceMix.join(", ")}. Each role is labelled with its type.</p>
 
         <figure className="xp-chart">
           <div className="xp-chart-bar mono">
             <span>
-              <b>career</b>.timeline()
+              <b>Timeline</b>
             </span>
-            <span>n={experience.length} · 2021 → now</span>
+            <span>2021 → now</span>
           </div>
           <div className="xp-legend">
             {(Object.keys(TYPES) as RoleType[]).map((t) => (
@@ -121,7 +118,7 @@ export default function Experience() {
                     <button
                       type="button"
                       className={`xp-row ${i === shown ? "on" : ""}`}
-                      style={{ "--c": TYPES[typeOf(r)].color } as React.CSSProperties}
+                      style={{ "--c": TYPES[r.type].color } as React.CSSProperties}
                       onMouseEnter={() => setHover(i)}
                       onFocus={() => setHover(i)}
                       onBlur={() => setHover(null)}
@@ -142,7 +139,7 @@ export default function Experience() {
             </ol>
           </div>
           <figcaption className="xp-readout" aria-live="polite">
-            <span className="dot" style={{ background: TYPES[typeOf(sr)].color }} />
+            <span className="dot" style={{ background: TYPES[sr.type].color }} />
             <span>
               <b>{sr.title}</b> · {sr.org}
               <small className="mono">{sr.dates}</small>
@@ -156,7 +153,7 @@ export default function Experience() {
           {roles.map((r, i) => {
             const isOpen = open.has(i);
             const id = `xp-details-${i}`;
-            const t = TYPES[typeOf(r)];
+            const t = TYPES[r.type];
             return (
               <li
                 key={r.org + r.dates}
@@ -185,7 +182,7 @@ export default function Experience() {
                   </div>
                   <p className="xp-summary">{r.summary}</p>
                   <button type="button" className="xp-toggle" aria-expanded={isOpen} aria-controls={id} onClick={() => toggle(i)}>
-                    Key achievements <span className="xp-count">{r.points.length}</span>
+                    What I did <span className="xp-count">{r.points.length}</span>
                     <span className="chev" aria-hidden>
                       <ChevronDown />
                     </span>

@@ -5,16 +5,16 @@ import { suggestions } from "@/data/knowledge";
 import { retrieve } from "@/lib/retrieve";
 import { SendIcon } from "./Icons";
 
-type Msg = { role: "user" | "bot"; text: string; sources?: string[]; pending?: boolean };
+type Msg = { role: "user" | "bot"; text: string; sources?: string[] };
 
 const FALLBACK =
-  "I couldn't find that in Sudha's CV. Try asking about her LLM, computer vision or analytics work, her education, or whether she can work in the UK. Or email her at sudhamsr23@gmail.com.";
+  "I couldn't find that in Sudha's CV. Try asking about her LLM, computer vision or analytics work, her education, or where she is based. Or email her at sudhamsr23@gmail.com.";
 
 export default function AskCV() {
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "bot",
-      text: "Hi! I answer questions about Sudha using her CV. Ask about her projects, skills, experience or availability.",
+      text: "Ask about Sudha's projects, skills, experience or location. I match your words against short passages from her CV.",
     },
   ]);
   const [q, setQ] = useState("");
@@ -29,8 +29,6 @@ export default function AskCV() {
     const text = question.trim();
     if (!text) return;
     setQ("");
-    setMsgs((m) => [...m, { role: "user", text }, { role: "bot", text: "", pending: true }]);
-
     const hits = retrieve(text);
     const top = hits[0];
     const related = hits[1] && hits[1].score >= top.score * 0.7 ? hits[1] : null;
@@ -41,9 +39,7 @@ export default function AskCV() {
           sources: [top.chunk.source, ...(related ? [related.chunk.source] : [])],
         }
       : { role: "bot", text: FALLBACK };
-
-    // short pause so the retrieval step reads as a step
-    window.setTimeout(() => setMsgs((m) => [...m.slice(0, -1), answer]), 450);
+    setMsgs((m) => [...m, { role: "user", text }, answer]);
   };
 
   return (
@@ -51,16 +47,16 @@ export default function AskCV() {
       <div className="ask-intro">
         <p className="eyebrow">Retrieval demo</p>
         <h2 className="h2" style={{ fontSize: "clamp(28px,3.4vw,40px)" }}>
-          Ask my CV <em>anything.</em>
+          Search <em>my CV.</em>
         </h2>
         <p>
-          A small retrieval system that finds the most relevant parts of my CV and shows which section each answer came from. It runs
-          entirely in your browser, so nothing you type is sent anywhere.
+          A small keyword-retrieval demo, not a generative model: it scores short passages from my CV against your question and shows
+          which section each answer came from. It runs entirely in your browser, so nothing you type is sent anywhere.
         </p>
-        <div className="pipeline" aria-hidden>
-          <div><i>1</i>tokenise query → keyword stems</div>
-          <div><i>2</i>score CV chunks by IDF-weighted overlap</div>
-          <div><i>3</i>return top-k answer + citations</div>
+        <div className="pipeline">
+          <div><i>1</i>Split the question into keyword stems</div>
+          <div><i>2</i>Score CV passages by IDF-weighted keyword overlap</div>
+          <div><i>3</i>Show the best one or two passages and their sources</div>
         </div>
       </div>
 
@@ -68,26 +64,18 @@ export default function AskCV() {
         <div className="chat-log" ref={logRef} aria-live="polite">
           {msgs.map((m, i) => (
             <div key={i} className={`msg ${m.role}`}>
-              {m.pending ? (
-                <span className="typing" aria-label="Searching">
-                  <i /><i /><i />
-                </span>
-              ) : (
-                <>
-                  {m.text}
-                  {m.sources && (
-                    <div className="src">
-                      {m.sources.map((s) => (
-                        <span key={s} className="chip">{s}</span>
-                      ))}
-                    </div>
-                  )}
-                </>
+              {m.text}
+              {m.sources && (
+                <div className="src">
+                  {m.sources.map((s) => (
+                    <span key={s} className="chip">{s}</span>
+                  ))}
+                </div>
               )}
             </div>
           ))}
         </div>
-        <div className="suggest">
+        <div className="suggest" role="group" aria-label="Example questions">
           {suggestions.map((s) => (
             <button key={s} type="button" onClick={() => ask(s)}>
               {s}
